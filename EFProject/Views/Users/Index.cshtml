@@ -1,0 +1,151 @@
+﻿@model PagedResult<User>
+<div class="card border-dark mb-3">
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<span class="fw-bold text-dark fs-5 d-flex align-items-center gap-2">
+			<i class="bi bi-person text-primary"></i>
+			Manage Users
+		</span>
+
+		<a href="/Users/Create" class="btn btn-primary">
+			<i class="bi bi-plus-circle"></i> Add User
+		</a>
+	</div>
+	<div class="card-body">
+		<div class="card mb-3">
+			<div class="card-body">
+				<form method="get" class="mb-3">
+					<div class="row align-items-center">
+						<div class="col-md-4">
+							<input type="text" name="userName" class="form-control" placeholder="Search by Username"/>
+						</div>
+						<div class="col-md-4">
+							<select name="IsActive"  class="form-control">
+								<option value="">All</option>
+								<option value="1">Active</option>
+								<option value="0">InActive</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+							<button type="submit" class="btn btn-primary w-100">
+								<i class="bi bi-search"></i> Search
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		@if (ViewBag.Message != null)
+		{
+			<div class="alert alert-dismissible alert-success">
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				<strong>Success !</strong> @ViewBag.Message.
+			</div>
+		}
+		@if (Model.Items.Count > 0)
+		{
+			<table class="table table-bordered table-striped table-hover">
+				<thead>
+					<tr>
+						<th>UserId</th>
+						<th>Username</th>
+						<th>Role</th>
+						<th>Status</th>
+						<th>Created By</th>
+						<th>Created On</th>
+						<th>Updated By</th>
+						<th>Updated On</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var user in Model.Items)
+					{
+						<tr>
+							<td>@user.UserId</td>
+							<td>@user.Username</td>
+							<td>@user.RoleName</td>
+							<td>
+								@if (user.IsActive == 1)
+								{
+									<span class="badge bg-success">Active</span>
+								}
+								else
+								{
+									<span class="badge bg-danger">InActive</span>
+								}
+							</td>
+							<td>@user.CreatedByName</td>
+							<td>@user.CreatedOn</td>
+							<td>@user.UpdatedByName</td>
+							<td>@user.UpdatedOn</td>
+							<td>
+								<a class="btn btn-sm btn-warning" href="/Users/Edit/@user.UserId">
+									<i class="bi bi-pencil"></i>
+								</a>
+								<a class="btn btn-sm btn-danger" id="btnDelete" data-id="@user.UserId">
+									<i class="bi bi-trash"></i>
+								</a>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+		else
+		{
+			<div class="alert alert-dismissible alert-danger">
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				<strong>Not Found!</strong>Records not found.
+			</div>
+		}
+	</div>
+</div>
+
+<!-- Pagination Partial -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+	@await Html.PartialAsync("_Pagination", Model)
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".btn-danger").click(function (e) {
+			var userId = $(this).data("id");
+
+			if (!userId) {
+				console.log("UserId is missing");
+				return;
+			}
+
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'Cancel'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						url: '/Users/Delete', 
+						type: 'POST',
+						data: { userId: userId },
+						success: function (response) {
+							if (response.success) {
+								$("#userRow_" + userId).remove(); 
+								location.reload();
+							} else {
+								Swal.fire('Error!', response.message, 'error');
+							}
+						},
+						error: function (xhr, status, error) {
+							Swal.fire('Error!', 'There was an error processing the request.', 'error');
+						}
+					});
+				}
+			});
+		});
+	});
+</script>
+

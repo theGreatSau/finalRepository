@@ -1,0 +1,152 @@
+﻿@model PagedResult<Role>
+<div class="card border-dark mb-3">
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<span class="fw-bold text-dark fs-5 d-flex align-items-center gap-2">
+			<i class="bi bi-person text-primary"></i>
+			Manage Roles
+		</span>
+
+		<a href="/Role/Create" class="btn btn-primary">
+			<i class="bi bi-plus-circle"></i> Add Role
+		</a>
+	</div>
+	<div class="card-body">
+		<div class="card mb-3">
+			<div class="card-body">
+				<form method="get" class="mb-3">
+					<div class="row align-items-center">
+						<div class="col-md-4">
+							<input type="text" name="RoleName" class="form-control" placeholder="Search by Role" />
+						</div>
+						<div class="col-md-4">
+							<select name="IsActive" class="form-control">
+								<option value="">All</option>
+								<option value="1">Active</option>
+								<option value="0">InActive</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+							<button type="submit" class="btn btn-primary w-100">
+								<i class="bi bi-search"></i> Search
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		@if (ViewBag.Message != null)
+		{
+			<div class="alert alert-dismissible alert-success">
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				<strong>Success !</strong> @ViewBag.Message.
+			</div>
+		}
+		@if (Model.Items.Count > 0)
+		{
+			<table class="table table-bordered table-striped table-hover">
+				<thead>
+					<tr>
+						<th>RoleId</th>
+						<th>RoleName</th>
+						<th>Status</th>
+						<th>Created By</th>
+						<th>Created On</th>
+						<th>Updated By</th>
+						<th>Updated On</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var role in Model.Items)
+					{
+						<tr>
+							<td>@role.RoleId</td>
+							<td>@role.RoleName</td>
+							<td>
+								@if (role.IsActive == 1)
+								{
+									<span class="badge bg-success">Active</span>
+								}
+								else
+								{
+									<span class="badge bg-danger">InActive</span>
+								}
+							</td>
+							<td>@role.CreatedByName</td>
+							<td>@role.CreatedOn</td>
+							<td>@role.UpdatedByName</td>
+							<td>@role.UpdatedOn</td>
+							<td>
+								<a class="btn btn-sm btn-warning" href="/Role/Edit/@role.RoleId">
+									<i class="bi bi-pencil"></i>
+								</a>
+								<a class="btn btn-sm btn-danger" id="btnDelete" data-id="@role.RoleId">
+									<i class="bi bi-trash"></i>
+								</a>
+								<a class="btn btn-sm btn-success" id="btnDelete" href="/Role/AssignPermissions/@role.RoleId">
+									<i class="bi bi-person-fill-check"></i>
+								</a>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+		else
+		{
+			<div class="alert alert-dismissible alert-danger">
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				<strong>Not Found!</strong>Records not found.
+			</div>
+		}
+	</div>
+</div>
+
+<!-- Pagination Partial -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+	@await Html.PartialAsync("_Pagination", Model)
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".btn-danger").click(function (e) {
+			var roleId = $(this).data("id");
+
+			if (!roleId) {
+				console.log("UserId is missing");
+				return;
+			}
+
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'Cancel'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						url: '/Role/Delete',
+						type: 'POST',
+						data: { roleId: roleId },
+						success: function (response) {
+							if (response.success) {
+								$("#roleRow_" + roleId).remove();
+								location.reload();
+							} else {
+								Swal.fire('Error!', response.message, 'error');
+							}
+						},
+						error: function (xhr, status, error) {
+							Swal.fire('Error!', 'There was an error processing the request.', 'error');
+						}
+					});
+				}
+			});
+		});
+	});
+</script>
+

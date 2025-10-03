@@ -1,0 +1,28 @@
+﻿@{
+	var actionName = ViewContext.RouteData.Values["action"].ToString();
+	var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<ul class="pagination mb-0">
+	@if (Model.HasPreviousPage)
+	{
+		<li class="page-item">
+			<a class="page-link" asp-action="@actionName" asp-controller="@controllerName"
+			   asp-route-pageNo="@(Model.PageNo - 1)">Previous</a>
+		</li>
+	}
+	@for (int i = 1; i <= Model.TotalPages; i++)
+	{
+		<li class="page-item @(i == Model.PageNo ? "active" : "")">
+			<a class="page-link" asp-action="@actionName" asp-controller="@controllerName"
+			   asp-route-pageNo="@i">@i</a>
+		</li>
+	}
+	@if (Model.HasNextPage)
+	{
+		<li class="page-item">
+			<a class="page-link" asp-action="@actionName" asp-controller="@controllerName"
+			   asp-route-pageNo="@(Model.PageNo + 1)">Next</a>
+		</li>
+	}
+</ul>

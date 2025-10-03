@@ -1,0 +1,90 @@
+/* Ubuntu Font */
+body {
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0;
+    background-color: #f8f9fac9;
+}
+
+/* Orange Theme */
+.bg-orange {
+    background-color: #ffffff !important;
+    ; /* Ubuntu orange */
+}
+
+/* Navbar */
+.navbar {
+    height: 60px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 220px;
+    height: calc(100vh - 60px);
+    background-color: #dd4814;
+    padding-top: 10px;
+    transition: width 0.3s;
+    overflow: hidden;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+}
+
+    .sidebar.collapsed {
+        width: 55px;
+    }
+
+    .sidebar a i {
+        margin-right: 10px;
+        min-width: 24px;
+        text-align: center;
+    }
+
+    .sidebar a span {
+        transition: opacity 0.3s;
+    }
+
+    .sidebar.collapsed a span {
+        display: none;
+    }
+
+    /* Active and Hover */
+    .sidebar a.active {
+        background-color: #dd4814;
+        color: #ffffff;
+    }
+
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: rgb(119, 41, 83);
+        text-decoration: none;
+        transition: background-color 0.2s ease, padding-left 0.2s;
+    }
+
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.15); /* subtle hover */
+            padding-left: 25px; /* slight slide effect */
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #dd4814;
+        }
+
+
+/* Content Area */
+.content {
+    margin-left: 220px;
+    margin-top: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+    .content.expanded {
+        margin-left: 60px;
+    }

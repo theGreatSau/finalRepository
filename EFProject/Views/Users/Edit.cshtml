@@ -1,0 +1,54 @@
+﻿@model User
+
+@{
+    var roles = ViewBag.Roles as IEnumerable<Role>;
+}
+<div class="card border-dark mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold fs-5 d-flex align-items-center gap-2">
+            <i class="bi bi-person text-primary"></i>
+            Edit User
+        </span>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+            <input type="hidden" asp-for="UserId" />
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Username" class="form-label">Username</label>
+                    <input asp-for="Username" class="form-control" placeholder="Enter Username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" class="form-control" placeholder="Enter Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="RoleId" class="form-label">Role</label>
+                    <select asp-for="RoleId" class="form-control" asp-items="@(new SelectList(roles, "RoleId", "RoleName"))">
+                        <option value="">-- Select Role --</option>
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="IsActive" class="form-label">Status</label>
+                    <select asp-for="IsActive" class="form-control">
+                        <option value="1">Active</option>
+                        <option value="0">InActive</option>
+                    </select>
+                    <span asp-validation-for="IsActive" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-outline-warning me-2"><i class="bi bi-check-circle"></i> Update</button>
+                <a href="/Users/Index" class="btn btn-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@model CustomerDetails
+
+<div class="card border-dark mb-3">
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<span class="fw-bold fs-5 d-flex align-items-center gap-2">
+			<i class="bi bi-person text-primary"></i>
+			Customer Details
+		</span>
+	</div>
+
+	<div class="card-body">
+		<div class="row mb-2">
+			<div class="col-3"><strong>First Name</strong></div>
+			<div class="col-3">@Model.customer.FirstName</div>
+			<div class="col-2"><strong>Last Name</strong></div>
+			<div class="col-3">@Model.customer.LastName</div>
+		</div>
+
+		<div class="row mb-2">
+			<div class="col-3"><strong>Email</strong></div>
+			<div class="col-3">@Model.customer.email</div>
+			<div class="col-2"><strong>Mobile No.</strong></div>
+			<div class="col-3">@Model.customer.MobileNo</div>
+		</div>
+
+		<div class="row mb-2">
+			<div class="col-3"><strong>Password</strong></div>
+			<div class="col-3">@Model.customer.Password</div>
+			<div class="col-2"><strong>Status</strong></div>
+			<div class="col-3">
+				@if (Model.customer.IsActive == 1)
+				{
+					<span class="badge bg-success">Active</span>
+				}
+				else
+				{
+					<span class="badge bg-danger">Inactive</span>
+				}
+			</div>
+		</div>
+		<div class="card border-dark mt-5">
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<span class="fw-bold fs-5 d-flex align-items-center gap-2">
+					Customer Address
+				</span>
+				<a href="/Customer/addAddress" class="btn btn-primary">
+					<i class="bi bi-plus-circle"></i> Add Address
+				</a>
+			</div>
+			<div class="card-body">
+				<table class="table table-bordered table-striped table-hover">
+					<tr>
+						<th>Address Type</th>
+						<th>Address Line 1</th>
+						<th>Address Line 2</th>
+						<th>City</th>
+						<th>State</th>
+						<th>Country</th>
+						<th>Pincode</th>
+						<th>Created On</th>
+						<th>Actions</th>
+					</tr>
+					<tr>
+						@foreach (var address in Model.addresses)
+						{
+							<td>@address.AddressType</td>
+							<td>@address.AddressLine1</td>
+							<td>@address.AddressLine2</td>
+							<td>@address.City</td>
+							<td>@address.State</td>
+							<td>@address.Country</td>
+							<td>@address.PinCode</td>
+							<td>@address.CreatedOn</td>
+							<td>
+								<a class="btn btn-sm btn-warning" href="/Customer/Edit/@address.CustomerId">
+									<i class="bi bi-pencil"></i>
+								</a>
+								<a class="btn btn-sm btn-info" href="/Customer/Details/@address.CustomerId">
+									<i class="bi bi-eye-fill"></i>
+								</a>
+								<a class="btn btn-sm btn-danger" id="btnDelete" data-id="@address.CustomerId">
+									<i class="bi bi-trash"></i>
+								</a>
+							</td>
+						}
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

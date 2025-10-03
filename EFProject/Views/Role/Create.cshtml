@@ -1,0 +1,36 @@
+﻿@model Role
+
+<div class="card border-dark mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold fs-5 d-flex align-items-center gap-2">
+            <i class="bi bi-person text-primary"></i>
+            Create User
+        </span>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="RoleName" class="form-label">Username</label>
+                    <input asp-for="RoleName" class="form-control" placeholder="Enter RoleName" />
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="IsActive" class="form-label">Status</label>
+                    <select asp-for="IsActive" class="form-control">
+                        <option value="1">Active</option>
+                        <option value="0">InActive</option>
+                    </select>
+                    <span asp-validation-for="IsActive" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="text-end">
+                <button type="submit" class="btn btn-outline-success me-2"><i class="bi bi-check-circle"></i> Create</button>
+                <a href="/Role/Index" class="btn btn-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
